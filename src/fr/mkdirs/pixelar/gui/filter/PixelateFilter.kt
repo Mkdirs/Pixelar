@@ -1,6 +1,7 @@
 package fr.mkdirs.pixelar.gui.filter
 
 import fr.mkdirs.pixelar.WINDOW
+import fr.mkdirs.pixelar.gui.History
 import fr.mkdirs.pixelar.gui.PixelarWindow
 import java.awt.Color
 import java.awt.Dimension
@@ -58,7 +59,7 @@ class PixelateFilter : PixelarFilter {
             }
         }
 
-        PixelarWindow.createTempFileFrom(image, "__Pixelar-pixelate__")
+
         return image
     }
 

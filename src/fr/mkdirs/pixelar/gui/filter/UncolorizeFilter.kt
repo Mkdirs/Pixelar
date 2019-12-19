@@ -1,5 +1,6 @@
 package fr.mkdirs.pixelar.gui.filter
 
+import fr.mkdirs.pixelar.gui.History
 import fr.mkdirs.pixelar.gui.PixelarWindow
 import java.awt.Color
 import java.awt.Frame
@@ -17,8 +18,6 @@ class UncolorizeFilter : PixelarFilter {
                 image.setRGB(x, y, Color(tint, tint, tint, pixel.alpha).rgb)
             }
         }
-        PixelarWindow.createTempFileFrom(image, "__Pixelar-uncolorize__")
-
         return image
     }
 
