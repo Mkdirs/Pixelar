@@ -1,8 +1,8 @@
 package fr.mkdirs.pixelar
 
 import fr.mkdirs.pixelar.gui.PixelarWindow
-import fr.mkdirs.pixelar.gui.filter.PixelateFilter
-import fr.mkdirs.pixelar.gui.filter.UncolorizeFilter
+import fr.mkdirs.pixelar.filter.PixelateFilter
+import fr.mkdirs.pixelar.filter.UncolorizeFilter
 import java.io.File
 
 val WINDOW = PixelarWindow(arrayOf(UncolorizeFilter(), PixelateFilter()))

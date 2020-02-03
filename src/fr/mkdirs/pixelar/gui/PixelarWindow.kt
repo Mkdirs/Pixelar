@@ -1,25 +1,28 @@
 package fr.mkdirs.pixelar.gui
 
 import fr.mkdirs.pixelar.HISTORY_DIR
-import fr.mkdirs.pixelar.gui.filter.PixelarFilter
-import fr.mkdirs.pixelar.gui.filter.PixelateFilter
-import fr.mkdirs.pixelar.gui.filter.UncolorizeFilter
+import fr.mkdirs.pixelar.filter.PixelarFilter
+import fr.mkdirs.pixelar.filter.PixelateFilter
+import fr.mkdirs.pixelar.filter.UncolorizeFilter
 import java.awt.*
 import java.awt.event.*
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Path
 import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 
+/**
+ * The main window of the program.
+ * @param filters The list of filters.
+ * @author Mkdirs.
+ */
 class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
     private val menuBar = JMenuBar()
     private val fileMenu = JMenu("File")
     private val effectsMenu = JMenu("Effects")
-    private val label = JLabel(/*ImageIcon(ImageIO.read(this.javaClass.getResourceAsStream("/img/pixelar_icon.png")))*/)
+    private val label = JLabel()
     private var fileStream = this.javaClass.getResourceAsStream("/img/pixelar_icon.png")
     private val historyPanel = JPanel(FlowLayout(FlowLayout.LEFT))
 
@@ -115,6 +118,10 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
 
     }
 
+    /**
+     * Initializes and shows the window with the default image.
+     * @author Mkdirs.
+     */
     fun initialize() {
         HISTORY.createFile(HISTORY.currentKey)
         showImage()
@@ -122,11 +129,22 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
         this.isVisible = true
     }
 
-    inline fun <reified T:PixelarFilter> getFilter() = filters.find { it is T}
+    /**
+     * @param T The type of the wanted filter.
+     * @return The filter matching with T.
+     * @author Mkdirs.
+     * @see PixelarFilter
+     */
+    private inline fun <reified T:PixelarFilter> getFilter() = filters.find { it is T}
 
+    /**
+     * Initializes the menus.
+     * @author Mkdirs.
+     */
     private fun initMenus(){
         menuBar.background = Color.DARK_GRAY
 
+        //Initializes the file menu.
         fun initFileMenu(){
             fileMenu.foreground = Color.WHITE
             val openFileMenu = JMenuItem("Open")
@@ -156,6 +174,7 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
             fileMenu.add(saveFileMenu)
         }
 
+        //Initializes the effects/filters menu.
         fun initEffectsMenu(){
             effectsMenu.foreground = Color.WHITE
             val uncolorizeMenu = JMenuItem("Black And White")
@@ -195,6 +214,10 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
     }
 
 
+    /**
+     * Shows the current image.
+     * @author Mkdirs.
+     */
     private fun showImage() {
         fileStream.close()
         label.icon = ImageIcon(HISTORY.getFile(HISTORY.currentKey)!!.absolutePath)
@@ -203,6 +226,11 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
     }
 
 
+    /**
+     * Adds graphic representation of a history key.
+     * @see History.Key
+     * @author Mkdirs.
+     */
     private fun addHistoryKeyUI(){
 
         class MouseListenerImpl : MouseListener{
@@ -246,6 +274,11 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
     }
 
 
+    /**
+     * Opens the open file dialog.
+     * @return The choosen file or null if no file has been selected.
+     * @author Mkdirs.
+     */
     private fun openFile() : File?{
         val chooser = JFileChooser()
         val filter = FileNameExtensionFilter("Images (*.JPG, *.PNG)", "jpg", "jpeg", "png")
@@ -259,6 +292,10 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
         return null
     }
 
+    /**
+     * Opens the save file dialog.
+     * @author Mkdirs.
+     */
     private fun saveFile(){
         val chooser = JFileChooser()
         chooser.removeChoosableFileFilter(chooser.acceptAllFileFilter)
@@ -283,7 +320,18 @@ class PixelarWindow(val filters:Array<PixelarFilter>) : JFrame() {
 
 }
 
+/**
+ * The history of the program.
+ * @author Mkdirs.
+ * @see Key
+ */
 class History{
+    /**
+     * A key of the history.
+     * @param image The image saved in this Key.
+     * @author Mkdirs.
+     * @see History
+     */
     class Key(val image:BufferedImage){}
     val keys = mutableListOf<Key>()
     var currentKey = Key(ImageIO.read(this.javaClass.getResourceAsStream("/img/pixelar_icon.png")))
@@ -291,6 +339,13 @@ class History{
         keys.add(currentKey)
     }
 
+    /**
+     * Creates a file from the image of the given Key.
+     * @param key The Key containing the image to be saved.
+     * @return true if the file has been created successfully, else otherwise.
+     * @author Mkdirs.
+     * @see Key
+     */
     fun createFile(key:Key):Boolean{
         if(!keys.contains(key))
             return false
@@ -309,6 +364,14 @@ class History{
 
         return true
     }
+
+    /**
+     * Deletes the file matching with the given Key.
+     * @param key The key matching with the file to be deleted.
+     * @author Mkdirs.
+     * @return true if the file has been deleted successfully, else otherwise.
+     * @see Key
+     */
     fun removeFile(key:Key):Boolean{
         if(!keys.contains(key))
             return false
@@ -319,6 +382,13 @@ class History{
 
         return file.delete()
     }
+
+    /**
+     * @param key The key matching with the wanted file.
+     * @return The file matching the given Key or null.
+     * @author Mkdirs.
+     * @see Key
+     */
     fun getFile(key:Key) = HISTORY_DIR.listFiles().find { it.name.replace(".png", "").substring(4).toInt() == keys.indexOf(key) }
 
 }

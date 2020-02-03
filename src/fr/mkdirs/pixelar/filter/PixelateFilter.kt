@@ -1,10 +1,7 @@
-package fr.mkdirs.pixelar.gui.filter
+package fr.mkdirs.pixelar.filter
 
 import fr.mkdirs.pixelar.WINDOW
-import fr.mkdirs.pixelar.gui.History
-import fr.mkdirs.pixelar.gui.PixelarWindow
 import java.awt.Color
-import java.awt.Dimension
 import java.awt.Frame
 import java.awt.image.BufferedImage
 import java.io.InputStream
